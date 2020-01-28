@@ -1,38 +1,119 @@
-.App {
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans:400,700|Source+Sans+Pro:300,400,600,700');
+
+:root {
+  --background-color: #fff;
+  --color-blue: hsl(210, 88%, 56%);
+  --color-grey: hsl(213, 30%, 29%);
+  --color-grey-light: hsl(213, 30%, 79%);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--background-color);
+  color: var(--color-blue);
+  font-family: 'Source Sans Pro', sans-serif;
+	line-height: 1.4em;
+  font-weight: 300;
+}
+
+.container {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 0 10px;
+}
+
+.header {
+  position: relative;
+  border-bottom: 2px solid var(--color-grey);
+  padding: 0 20px;
+}
+
+.header h1 {
+  float: left;
+  font-size: 22px;
+	font-weight: 600;
+  line-height: 2.25;
+  color: var(--color-grey);
+  -webkit-text-rendering: optimizeLegibility;
+	-moz-text-rendering: optimizeLegibility;
+	text-rendering: optimizeLegibility;
+}
+
+.header__group-one {
+  color: var(--color-blue);
+}
+
+.header__group-two {
+  color: var(--color-grey-light);
+}
+
+.header h2 {
+  float: right;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 2;
+  color: var(--color-grey);
+  padding-top: 8px;
+  cursor: pointer;
+}
+
+.header h2:hover {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.header::after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+.game {
+  color: var(--color-grey);
+}
+
+.game__board {
+  font-family: 'Noto Sans', sans-serif;
+  font-size: 26px;
+  font-weight: 300;
+  margin: 30px 20px;
+  border: 2px solid var(--color-grey);
+  border-collapse: collapse;
+}
+
+.game__row:nth-child(3n) {
+  border-bottom: 2px solid var(--color-grey);
+}
+
+.game__cell {
+  border: 1px solid var(--color-grey-light);
+  padding: 12px 16px;
+}
+
+.game__cell:nth-child(3n) {
+  border-right: 2px solid var(--color-grey);
+}
+
+.footer {
+  color: var(--color-grey);
+  font-weight: 400;
+  margin: 80px;
   text-align: center;
+  /*color: rgb(48, 143, 242);*/
+  font-size: 14px;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.footer a {
+  color: var(--color-blue);
+  text-decoration: none;
+  padding-bottom: 0px;
+  border-bottom: 2px dotted var(--color-blue);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.footer a:visited {
+  color: var(--color-blue);
 }
