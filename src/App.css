@@ -101,6 +101,15 @@ body {
 .game__cell {
   border: 1px solid var(--color-grey-lighter);
   padding: 12px 16px;
+  color: var(--background-color);
+}
+
+.game__cell.game__cell--filled {
+  color: var(--color-grey);
+}
+
+.game__cell.game__cell--userfilled {
+  color: var(--color-grey-light);
 }
 
 .game__cell:nth-child(3n) {
@@ -171,6 +180,10 @@ body {
   font-family: 'Noto Sans', sans-serif;
   font-size: 26px;
   padding: 12px 0;
+}
+
+.status__number.status__number--selected {
+  color: var(--color-blue);
 }
 
 .status__actions {
