@@ -5,7 +5,8 @@ export const Timer = (props) => {
   let [currentTime, setCurrentTime] = useState(moment());
 
   useEffect(() => {
-    setTimeout(() => tick(), 1000);
+    if (!props.won)
+      setTimeout(() => tick(), 1000);
   });
 
   function tick() {
@@ -14,6 +15,8 @@ export const Timer = (props) => {
 
   function getTimer() {
     let secondsTotal = currentTime.diff(props.timeGameStarted, 'seconds');
+    if (secondsTotal <= 0)
+      return '00:00';
     let duration = moment.duration(secondsTotal, 'seconds');
     let hours = duration.hours();
     let minutes = duration.minutes();

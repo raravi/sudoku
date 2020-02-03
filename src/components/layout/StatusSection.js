@@ -9,7 +9,7 @@ export const StatusSection = (props) => {
   return (
     <section className="status">
       <Difficulty difficulty={props.difficulty} onChange={props.onChange} />
-      <Timer timeGameStarted={props.timeGameStarted} />
+      <Timer timeGameStarted={props.timeGameStarted} won={props.won} />
       <Numbers numberSelected={props.numberSelected} onClickNumber={(number) => props.onClickNumber(number)} />
       <div className="status__actions">
         <Action action='undo' onClickAction={props.onClickUndo} />
