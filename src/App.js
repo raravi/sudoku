@@ -1,42 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import moment from 'moment';
 import { Header } from './components/layout/Header';
 import { GameSection } from './components/layout/GameSection';
 import { StatusSection } from './components/layout/StatusSection';
 import { Footer } from './components/layout/Footer';
 import './App.css';
-import { getSudoku } from './sudoku';
+import { getUniqueSudoku } from './solver/UniqueSudoku';
 
+/**
+ * App is the root React component.
+ */
 function App() {
-  let initialArray = [ '8', '0', '0', '0', '2', '0', '9', '1', '0',
-                    '2', '3', '4', '5', '1', '0', '0', '0', '7',
-                    '7', '1', '0', '0', '8', '0', '0', '5', '4',
-                    '6', '0', '0', '1', '0', '0', '3', '0', '5',
-                    '1', '8', '5', '0', '0', '0', '7', '2', '0',
-                    '0', '4', '0', '6', '0', '2', '8', '0', '0',
-                    '0', '6', '8', '0', '0', '0', '4', '0', '0',
-                    '0', '0', '0', '0', '0', '0', '1', '6', '2',
-                    '0', '0', '0', '4', '0', '7', '5', '3', '0' ];
-  let nullArray = [ '0', '0', '0', '0', '0', '0', '0', '0', '0',
-                    '0', '0', '0', '0', '0', '0', '0', '0', '0',
-                    '0', '0', '0', '0', '0', '0', '0', '0', '0',
-                    '0', '0', '0', '0', '0', '0', '0', '0', '0',
-                    '0', '0', '0', '0', '0', '0', '0', '0', '0',
-                    '0', '0', '0', '0', '0', '0', '0', '0', '0',
-                    '0', '0', '0', '0', '0', '0', '0', '0', '0',
-                    '0', '0', '0', '0', '0', '0', '0', '0', '0',
-                    '0', '0', '0', '0', '0', '0', '0', '0', '0' ];
-  let initialSolvedArray=[ '8', '5', '6', '7', '2', '4', '9', '1', '3',
-                    '2', '3', '4', '5', '1', '9', '6', '8', '7',
-                    '7', '1', '9', '3', '8', '6', '2', '5', '4',
-                    '6', '9', '2', '1', '7', '8', '3', '4', '5',
-                    '1', '8', '5', '9', '4', '3', '7', '2', '6',
-                    '3', '4', '7', '6', '5', '2', '8', '9', '1',
-                    '5', '6', '8', '2', '3', '1', '4', '7', '9',
-                    '4', '7', '3', '8', '9', '5', '1', '6', '2',
-                    '9', '2', '1', '4', '6', '7', '5', '3', '8' ];
-  let sudoku = getSudoku();
-  let [ gameArray, setGameArray ] = useState(initialArray);
+  /**
+   * All the variables for holding state:
+   * gameArray: Holds the current state of the game.
+   * initArray: Holds the initial state of the game.
+   * solvedArray: Holds the solved position of the game.
+   * difficulty: Difficulty level - 'Easy', 'Medium' or 'Hard'
+   * numberSelected: The Number selected in the Status section.
+   * timeGameStarted: Time the current game was started.
+   * mistakesMode: Is Mistakes allowed or not?
+   * fastMode: Is Fast Mode enabled?
+   * cellSelected: If a game cell is selected by the user, holds the index.
+   * history: history of the current game, for 'Undo' purposes.
+   * overlay: Is the 'Game Solved' overlay enabled?
+   * won: Is the game 'won'?
+   */
+  let [ gameArray, setGameArray ] = useState([]);
   let [ difficulty,setDifficulty ] = useState('Easy');
   let [ numberSelected, setNumberSelected ] = useState('0');
   let [ timeGameStarted, setTimeGameStarted ] = useState(moment());
@@ -44,141 +34,20 @@ function App() {
   let [ fastMode, setFastMode ] = useState(false);
   let [ cellSelected, setCellSelected ] = useState(-1);
   let [ history, setHistory ] = useState([]);
-  let [ initArray, setInitArray ] = useState(initialArray);
-  let [ solvedArray, setSolvedArray ] = useState(initialSolvedArray);
+  let [ initArray, setInitArray ] = useState([]);
+  let [ solvedArray, setSolvedArray ] = useState([]);
   let [ overlay, setOverlay] = useState(false);
   let [won, setWon ] = useState(false);
 
-  function _getBoxCenter(box) {
-    switch(box) {
-      case 0: return [1,1];
-      case 1: return [1,4];
-      case 2: return [1,7];
-      case 3: return [4,1];
-      case 4: return [4,4];
-      case 5: return [4,7];
-      case 6: return [7,1];
-      case 7: return [7,4];
-      case 8: return [7,7];
-    }
-  }
-
-  function _getIndexOfCell(box, cell) {
-    let [row, column] = _getBoxCenter(box);
-    switch(cell) {
-      case 0: {row--; column--; break;}
-      case 1: {row--; break;}
-      case 2: {row--; column++; break;}
-      case 3: {column--; break;}
-      case 4: {break;}
-      case 5: {column++; break;}
-      case 6: {row++; column--; break;}
-      case 7: {row++; break;}
-      case 8: {row++; column++; break;}
-    }
-    return row * 9 + column;
-  }
-
-  function _cellAvailable(tempInitArray, box, value) {
-    return tempInitArray[_getIndexOfCell(box, value)] === '0' ? 0 : 1;
-  }
-
-  function _generateUniqueSudoku(solvedArray, e) {
-    let currentDifficulty = difficulty;
-    let boxes = 9;
-    let cells = 9;
-    let minimumCells, maximumCells, totalCells, box, cell;
-
-    let tempInitArray = nullArray.slice();
-    let boxCounts = [ 0,0,0,
-                      0,0,0,
-                      0,0,0 ];
-    let boxesAvailable = [];
-    let cellsAvailable = [];
-
-    if (e)
-      currentDifficulty = e.target.value;
-
-    if (currentDifficulty === 'Easy') {
-      minimumCells = 3;
-      maximumCells = 7;
-      totalCells = 45;
-    }
-    else if (currentDifficulty === 'Medium') {
-      minimumCells = 2;
-      maximumCells = 6;
-      totalCells = 40;
-    }
-    else {
-      minimumCells = 1;
-      maximumCells = 5;
-      totalCells = 30;
-    }
-
-    for (let j = 0; j < 9; j++) {
-      boxCounts[j] =  _cellAvailable(tempInitArray, j, 0) +
-                      _cellAvailable(tempInitArray, j, 1) +
-                      _cellAvailable(tempInitArray, j, 2) +
-                      _cellAvailable(tempInitArray, j, 3) +
-                      _cellAvailable(tempInitArray, j, 4) +
-                      _cellAvailable(tempInitArray, j, 5) +
-                      _cellAvailable(tempInitArray, j, 6) +
-                      _cellAvailable(tempInitArray, j, 7) +
-                      _cellAvailable(tempInitArray, j, 8);
-    }
-
-    for (let i = 0; i < totalCells; i++) {
-      boxesAvailable = [];
-      for (let j = 0; j < 9; j++) {
-        if (boxCounts[j] < minimumCells) {
-          boxesAvailable.push(j);
-        }
-      }
-      if (boxesAvailable) {
-        for (let j = 0; j < 9; j++) {
-          if (boxCounts[j] < maximumCells) {
-            boxesAvailable.push(j);
-          }
-        }
-      }
-      box = boxesAvailable[Math.random() * boxesAvailable.length | 0];
-
-      cellsAvailable = [];
-      for (let j = 0; j < 9; j++) {
-        if ( tempInitArray[_getIndexOfCell(box, j)] === '0') {
-          cellsAvailable.push(j);
-        }
-      }
-      cell = cellsAvailable[Math.random() * cellsAvailable.length | 0];
-
-      let index = _getIndexOfCell(box, cell);
-      tempInitArray[index] = solvedArray[index]
-      boxCounts[box]++;
-    }
-
-    return tempInitArray;
-  }
-
+  /**
+   * Creates a new game and initializes the state variables.
+   */
   function _createNewGame(e) {
-    let tempInitArray = nullArray.slice();
-    let tempSolvedArray = nullArray.slice();
+    let [ temporaryInitArray, temporarySolvedArray ] = getUniqueSudoku(difficulty, e);
 
-    let str = sudoku.generate(60);
-
-    [...str].forEach((value, index) => {
-      tempInitArray[index] = value === '.'
-                          ? '0'
-                          : value;
-    });
-    str = sudoku.solve(str);
-    [...str].forEach((value, index) => {
-      tempSolvedArray[index] = value;
-    });
-    tempInitArray = _generateUniqueSudoku(tempSolvedArray, e);
-
-    setInitArray(tempInitArray);
-    setGameArray(tempInitArray);
-    setSolvedArray(tempSolvedArray);
+    setInitArray(temporaryInitArray);
+    setGameArray(temporaryInitArray);
+    setSolvedArray(temporarySolvedArray);
     setNumberSelected('0');
     setTimeGameStarted(moment());
     setCellSelected(-1);
@@ -186,6 +55,9 @@ function App() {
     setWon(false);
   }
 
+  /**
+   * Checks if the game is solved.
+   */
   function _isSolved(index, value) {
     if (gameArray.every((cell, cellIndex) => {
           if (cellIndex === index)
@@ -198,6 +70,10 @@ function App() {
     return false;
   }
 
+  /**
+   * Fills the cell with the given 'value'
+   * Used to Fill / Erase as required.
+   */
   function _fillCell(index, value) {
     if (initArray[index] === '0') {
       // Direct copy results in interesting set of problems, investigate more!
@@ -218,6 +94,10 @@ function App() {
     }
   }
 
+  /**
+   * A 'user fill' will be passed on to the
+   * _fillCell function above.
+   */
   function _userFillCell(index, value) {
     if (mistakesMode) {
       if (value === solvedArray[index]) {
@@ -231,10 +111,17 @@ function App() {
     }
   }
 
+  /**
+   * On Click of 'New Game' link,
+   * create a new game.
+   */
   function onClickNewGame() {
     _createNewGame();
   }
 
+  /**
+   * On Click of a Game cell.
+   */
   function onClickCell(indexOfArray) {
     if (fastMode && numberSelected !== '0') {
       _userFillCell(indexOfArray, numberSelected);
@@ -242,11 +129,20 @@ function App() {
     setCellSelected(indexOfArray);
   }
 
+  /**
+   * On Change Difficulty,
+   * 1. Update 'Difficulty' level
+   * 2. Create New Game
+   */
   function onChangeDifficulty(e) {
     setDifficulty(e.target.value);
     _createNewGame(e);
   }
 
+  /**
+   * On Click of Number in Status section,
+   * either fill cell or set the number.
+   */
   function onClickNumber(number) {
     if (fastMode) {
       setNumberSelected(number)
@@ -255,6 +151,10 @@ function App() {
     }
   }
 
+  /**
+   * On Click Undo,
+   * try to Undo the latest change.
+   */
   function onClickUndo() {
     if(history.length) {
       let tempHistory = history.slice();
@@ -264,22 +164,36 @@ function App() {
     }
   }
 
+  /**
+   * On Click Erase,
+   * try to delete the cell.
+   */
   function onClickErase() {
     if(cellSelected !== -1 && gameArray[cellSelected] !== '0') {
       _fillCell(cellSelected, '0');
     }
   }
 
+  /**
+   * On Click Hint,
+   * fill the selected cell if its empty or wrong number is filled.
+   */
   function onClickHint() {
     if (cellSelected !== -1) {
       _fillCell(cellSelected, solvedArray[cellSelected]);
     }
   }
 
+  /**
+   * Toggle Mistakes Mode
+   */
   function  onClickMistakesMode() {
     setMistakesMode(!mistakesMode);
   }
 
+  /**
+   * Toggle Fast Mode
+   */
   function onClickFastMode() {
     if (fastMode) {
       setNumberSelected('0');
@@ -288,10 +202,20 @@ function App() {
     setFastMode(!fastMode);
   }
 
+  /**
+   * Close the overlay on Click.
+   */
   function onClickOverlay() {
     setOverlay(false);
     _createNewGame();
   }
+
+  /**
+   * On load, create a New Game.
+   */
+  useEffect(() => {
+    _createNewGame();
+  }, []);
 
   return (
     <>

@@ -1,5 +1,8 @@
 import React from 'react';
 
+/**
+ * React component for the Number Selector in the Status Section.
+ */
 export const Numbers = (props) => {
   return (
     <div className="status__numbers">

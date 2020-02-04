@@ -1,5 +1,11 @@
+/**
+ * Import Google Fonts.
+ */
 @import url('https://fonts.googleapis.com/css?family=Teko|Noto+Sans|Source+Sans+Pro:300,400,600');
 
+/**
+ * Custom Properties for keeping the CSS 'DRY'!
+ */
 :root {
   --background-color: #fff;
   --color-blue: hsl(210, 88%, 56%);
@@ -10,12 +16,18 @@
   --color-orange-dark: hsl(34, 76%, 89%);
 }
 
+/**
+ * CSS Resets for all elements.
+ */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
+/**
+ * Declare default values here.
+ */
 body {
   background: var(--background-color);
   color: var(--color-blue);
@@ -24,6 +36,9 @@ body {
   font-weight: 300;
 }
 
+/**
+ * A container for the game.
+ */
 .container {
   max-width: 700px;
   min-width: 270px;
@@ -31,6 +46,9 @@ body {
   padding: 0 10px;
 }
 
+/**
+ * Header Section
+ */
 .header {
   position: relative;
   border-bottom: 2px solid var(--color-grey);
@@ -76,6 +94,9 @@ body {
   clear: both;
 }
 
+/**
+ * Inner Container - contains both Game Section & Status Section.
+ */
 .innercontainer {
   display: flex;
   color: var(--color-grey);
@@ -83,6 +104,9 @@ body {
   padding: 0 20px;
 }
 
+/**
+ * Game Section
+ */
 .game {
   width: 70%;
 }
@@ -148,6 +172,9 @@ body {
   border-right: 2px solid var(--color-grey);
 }
 
+/**
+ * Status Section
+ */
 .status {
   width: 30%;
 }
@@ -346,6 +373,9 @@ input:checked + .status__action-fast-mode-slider:before {
   transform: translateX(20px);
 }
 
+/**
+ * Footer Section
+ */
 .footer {
   color: var(--color-grey);
   font-weight: 400;
@@ -365,6 +395,9 @@ input:checked + .status__action-fast-mode-slider:before {
   color: var(--color-blue);
 }
 
+/**
+ * Overlay Section
+ */
 .overlay {
   position: fixed;
   display: none;
@@ -407,6 +440,9 @@ input:checked + .status__action-fast-mode-slider:before {
   color: var(--color-blue);
 }
 
+/**
+ * Add this to blur any DIV!
+ */
 .blur {
 	-webkit-filter: blur(2px);
 	-moz-filter: blur(2px);
@@ -415,6 +451,15 @@ input:checked + .status__action-fast-mode-slider:before {
 	filter: blur(2px);
 }
 
+/**
+ * Responsive Web Design!
+ * 5 Modes:
+ * 1. screen width > 670 px (2 column mode)
+ * 2. 500px < screen width <= 670 px (1 column mode from here down...)
+ * 3. 350px < screen width <= 500 px
+ * 4. 300px < screen width <= 350 px
+ * 5. screen width <= 300 px
+ */
 @media screen and (max-width: 670px) {
   .innercontainer {
     max-width: 500px;

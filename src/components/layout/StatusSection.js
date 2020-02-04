@@ -5,6 +5,9 @@ import { Numbers } from '../Numbers';
 import { Action } from '../Action';
 import { Mode } from '../Mode';
 
+/**
+ * React component for the Status Section.
+ */
 export const StatusSection = (props) => {
   return (
     <section className="status">

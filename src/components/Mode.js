@@ -1,5 +1,9 @@
 import React from 'react';
 
+/**
+ * React component for the Mistakes Mode / Fast Mode
+ * elements in the Status Section.
+ */
 export const Mode = (props) => {
   return (
     <div className={ props.mode === 'mistakes'

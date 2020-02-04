@@ -1,8 +1,16 @@
 import React from 'react';
 
+/**
+ * React component for the Game Section
+ */
 export const GameSection = (props) => {
   const rows = [0,1,2,3,4,5,6,7,8];
 
+  /**
+   * Cell Highlight Method 1: Highlight all cells
+   * related to current cell. By related, I mean all
+   * cells in the same row/column/box as the current cell.
+   */
   function _isCellRelatedToSelectedCell(row, column) {
     if (props.cellSelected === row * 9 + column) {
       return true;
@@ -31,6 +39,10 @@ export const GameSection = (props) => {
             });
   }
 
+  /**
+   * Cell Highlight Method 2: Highlight all cells with
+   * the same number as in the current cell.
+   */
   function _isCellSameAsSelectedCell(row, column) {
     if (props.fastMode) {
       if (props.numberSelected === props.gameArray[row * 9 + column]) {
@@ -50,24 +62,30 @@ export const GameSection = (props) => {
     }
   }
 
-  function _selectedCell(indexOfArray, value) {
+  /**
+   * Returns the classes for a cell related to the selected cell.
+   */
+  function _selectedCell(indexOfArray, value, highlight) {
     if (value !== '0') {
       if (props.initArray[indexOfArray] === '0') {
         return (
-          <td className="game__cell game__cell--userfilled game__cell--selected" key={indexOfArray} onClick={() => props.onClick(indexOfArray)}>{value}</td>
+          <td className={`game__cell game__cell--userfilled game__cell--${highlight}selected`} key={indexOfArray} onClick={() => props.onClick(indexOfArray)}>{value}</td>
         )
       } else {
         return (
-          <td className="game__cell game__cell--filled game__cell--selected" key={indexOfArray} onClick={() => props.onClick(indexOfArray)}>{value}</td>
+          <td className={`game__cell game__cell--filled game__cell--${highlight}selected`} key={indexOfArray} onClick={() => props.onClick(indexOfArray)}>{value}</td>
         )
       }
     } else {
       return (
-        <td className="game__cell game__cell--selected" key={indexOfArray} onClick={() => props.onClick(indexOfArray)}>{value}</td>
+        <td className={`game__cell game__cell--${highlight}selected`} key={indexOfArray} onClick={() => props.onClick(indexOfArray)}>{value}</td>
       )
     }
   }
 
+  /**
+   * Returns the classes or a cell not related to the selected cell.
+   */
   function _unselectedCell(indexOfArray, value) {
     if (value !== '0') {
       if (props.initArray[indexOfArray] === '0') {
@@ -100,32 +118,18 @@ export const GameSection = (props) => {
                       const value = props.gameArray[indexOfArray];
 
                       if (props.cellSelected === indexOfArray) {
-                        if (value !== '0') {
-                          if (props.initArray[indexOfArray] === '0') {
-                            return (
-                              <td className="game__cell game__cell--userfilled game__cell--highlightselected" key={indexOfArray} onClick={() => props.onClick(indexOfArray)}>{value}</td>
-                            )
-                          } else {
-                            return (
-                              <td className="game__cell game__cell--filled game__cell--highlightselected" key={indexOfArray} onClick={() => props.onClick(indexOfArray)}>{value}</td>
-                            )
-                          }
-                        } else {
-                          return (
-                            <td className="game__cell game__cell--highlightselected" key={indexOfArray} onClick={() => props.onClick(indexOfArray)}>{value}</td>
-                          )
-                        }
+                        return _selectedCell(indexOfArray, value, 'highlight');
                       }
 
                       if (props.fastMode) {
                         if (props.numberSelected !== '0' && _isCellSameAsSelectedCell(row, column)) {
-                          return _selectedCell(indexOfArray, value);
+                          return _selectedCell(indexOfArray, value, '');
                         } else {
                           return _unselectedCell(indexOfArray, value);
                         }
                       } else {
                         if (props.cellSelected !== -1 && _isCellSameAsSelectedCell(row, column)) {
-                          return _selectedCell(indexOfArray, value);
+                          return _selectedCell(indexOfArray, value, '');
                         } else {
                           return _unselectedCell(indexOfArray, value);
                         }

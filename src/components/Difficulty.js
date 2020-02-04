@@ -1,5 +1,8 @@
 import React from 'react';
 
+/**
+ * React component for the Difficulty Selector.
+ */
 export const Difficulty = (props) => {
   return (
     <div className="status__difficulty">
