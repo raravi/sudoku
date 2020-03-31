@@ -11,5 +11,6 @@ Features:
 * Only functional components!
 * useEffect, useState hooks instead of state.
 * Simple use of `props`.
+* All the game logic resides in a single component.
 * Use CSS Custom properties to keep the stylesheet DRY.
 * Understand how functions can be sent down as `props` and consumed.
