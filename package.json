@@ -2,7 +2,9 @@
   "name": "sudoku",
   "version": "0.1.0",
   "private": true,
+  "author": "Amith Raravi <amith.raravi@gmail.com>",
   "homepage": "https://raravi.github.io/sudoku",
+  "license": "The MIT License (MIT)",
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
