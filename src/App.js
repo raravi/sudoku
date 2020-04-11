@@ -222,8 +222,27 @@ function App() {
       <div className={overlay?"container blur":"container"}>
         <Header onClick={onClickNewGame}/>
         <div className="innercontainer">
-          <GameSection gameArray={gameArray} initArray={initArray} fastMode={fastMode} numberSelected={numberSelected} cellSelected={cellSelected} onClick={(indexOfArray) => onClickCell(indexOfArray)}/>
-          <StatusSection difficulty={difficulty} numberSelected={numberSelected} timeGameStarted={timeGameStarted} won={won} onClickNumber={(number) => onClickNumber(number)} onChange={(e) => onChangeDifficulty(e)} onClickUndo={onClickUndo} onClickErase={onClickErase} onClickHint={onClickHint} onClickMistakesMode={onClickMistakesMode} onClickFastMode={onClickFastMode} />
+          <GameSection
+            gameArray={gameArray}
+            initArray={initArray}
+            fastMode={fastMode}
+            numberSelected={numberSelected}
+            cellSelected={cellSelected}
+            onClick={(indexOfArray) => onClickCell(indexOfArray)}
+          />
+          <StatusSection
+            difficulty={difficulty}
+            numberSelected={numberSelected}
+            timeGameStarted={timeGameStarted}
+            won={won}
+            onClickNumber={(number) => onClickNumber(number)}
+            onChange={(e) => onChangeDifficulty(e)}
+            onClickUndo={onClickUndo}
+            onClickErase={onClickErase}
+            onClickHint={onClickHint}
+            onClickMistakesMode={onClickMistakesMode}
+            onClickFastMode={onClickFastMode}
+          />
         </div>
         <Footer />
       </div>
