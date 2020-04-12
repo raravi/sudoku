@@ -1,14 +1,17 @@
 import React from 'react';
+import { useNumberValue } from '../context/NumberContext';
 
 /**
  * React component for the Number Selector in the Status Section.
  */
 export const Numbers = (props) => {
+  let [ numberSelected ] = useNumberValue();
+
   return (
     <div className="status__numbers">
       {
         [1,2,3,4,5,6,7,8,9].map((number) => {
-          if (props.numberSelected === number.toString()) {
+          if (numberSelected === number.toString()) {
             return (
               <div className="status__number status__number--selected" key={number} onClick={() => props.onClickNumber(number.toString())}>{number}</div>
             )

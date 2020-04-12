@@ -1,16 +1,19 @@
 import React from 'react';
+import { useNumberValue } from '../../context/NumberContext';
 
 /**
  * React component for the Game Section
  */
 export const GameSection = (props) => {
   const rows = [0,1,2,3,4,5,6,7,8];
+  let [ numberSelected ] = useNumberValue();
 
   /**
    * Cell Highlight Method 1: Highlight all cells
    * related to current cell. By related, I mean all
    * cells in the same row/column/box as the current cell.
    */
+  // eslint-disable-next-line
   function _isCellRelatedToSelectedCell(row, column) {
     if (props.cellSelected === row * 9 + column) {
       return true;
@@ -45,7 +48,7 @@ export const GameSection = (props) => {
    */
   function _isCellSameAsSelectedCell(row, column) {
     if (props.fastMode) {
-      if (props.numberSelected === props.gameArray[row * 9 + column]) {
+      if (numberSelected === props.gameArray[row * 9 + column]) {
         return true;
       }
       return false;
@@ -122,7 +125,7 @@ export const GameSection = (props) => {
                       }
 
                       if (props.fastMode) {
-                        if (props.numberSelected !== '0' && _isCellSameAsSelectedCell(row, column)) {
+                        if (numberSelected !== '0' && _isCellSameAsSelectedCell(row, column)) {
                           return _selectedCell(indexOfArray, value, '');
                         } else {
                           return _unselectedCell(indexOfArray, value);

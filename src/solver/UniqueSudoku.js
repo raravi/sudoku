@@ -89,6 +89,7 @@ let nullArray = [ '0', '0', '0', '0', '0', '0', '0', '0', '0',
  * Gets the coordinates of the center cell of the specified box.
  */
 function _getBoxCenter(box) {
+  // eslint-disable-next-line
   switch(box) {
     case 0: return [1,1];
     case 1: return [1,4];
@@ -109,6 +110,7 @@ function _getBoxCenter(box) {
  */
 function _getIndexOfCell(box, cell) {
   let [row, column] = _getBoxCenter(box);
+  // eslint-disable-next-line
   switch(cell) {
     case 0: {row--; column--; break;}
     case 1: {row--; break;}
@@ -135,8 +137,6 @@ function _cellAvailable(tempInitArray, box, value) {
  */
 function _generateUniqueSudoku(solvedArray, difficulty, e) {
   let currentDifficulty = difficulty;
-  let boxes = 9;
-  let cells = 9;
   let minimumCells, maximumCells, totalCells, box, cell;
 
   let tempInitArray = nullArray.slice();
