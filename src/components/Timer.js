@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useSudokuContext } from '../context/SudokuContext';
 import moment from 'moment';
 
 /**
@@ -7,9 +8,10 @@ import moment from 'moment';
  */
 export const Timer = (props) => {
   let [currentTime, setCurrentTime] = useState(moment());
+  let { timeGameStarted, won } = useSudokuContext();
 
   useEffect(() => {
-    if (!props.won)
+    if (!won)
       setTimeout(() => tick(), 1000);
   });
 
@@ -18,7 +20,7 @@ export const Timer = (props) => {
   }
 
   function getTimer() {
-    let secondsTotal = currentTime.diff(props.timeGameStarted, 'seconds');
+    let secondsTotal = currentTime.diff(timeGameStarted, 'seconds');
     if (secondsTotal <= 0)
       return '00:00';
     let duration = moment.duration(secondsTotal, 'seconds');

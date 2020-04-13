@@ -5,7 +5,7 @@ import { GameSection } from './components/layout/GameSection';
 import { StatusSection } from './components/layout/StatusSection';
 import { Footer } from './components/layout/Footer';
 import { getUniqueSudoku } from './solver/UniqueSudoku';
-import { useNumberValue } from './context/NumberContext';
+import { useSudokuContext } from './context/SudokuContext';
 
 /**
  * Game is the main React component.
@@ -26,18 +26,18 @@ export const Game = () => {
    * overlay: Is the 'Game Solved' overlay enabled?
    * won: Is the game 'won'?
    */
-  let [ gameArray, setGameArray ] = useState([]);
-  let [ difficulty,setDifficulty ] = useState('Easy');
-  let [ numberSelected, setNumberSelected ] = useNumberValue();
-  let [ timeGameStarted, setTimeGameStarted ] = useState(moment());
+  let { numberSelected, setNumberSelected,
+        gameArray, setGameArray,
+        difficulty, setDifficulty,
+        setTimeGameStarted,
+        fastMode, setFastMode,
+        cellSelected, setCellSelected,
+        initArray, setInitArray,
+        setWon } = useSudokuContext();
   let [ mistakesMode, setMistakesMode ] = useState(false);
-  let [ fastMode, setFastMode ] = useState(false);
-  let [ cellSelected, setCellSelected ] = useState(-1);
   let [ history, setHistory ] = useState([]);
-  let [ initArray, setInitArray ] = useState([]);
   let [ solvedArray, setSolvedArray ] = useState([]);
-  let [ overlay, setOverlay] = useState(false);
-  let [won, setWon ] = useState(false);
+  let [ overlay, setOverlay ] = useState(false);
 
   /**
    * Creates a new game and initializes the state variables.
@@ -224,16 +224,9 @@ export const Game = () => {
         <Header onClick={onClickNewGame}/>
         <div className="innercontainer">
           <GameSection
-            gameArray={gameArray}
-            initArray={initArray}
-            fastMode={fastMode}
-            cellSelected={cellSelected}
             onClick={(indexOfArray) => onClickCell(indexOfArray)}
           />
           <StatusSection
-            difficulty={difficulty}
-            timeGameStarted={timeGameStarted}
-            won={won}
             onClickNumber={(number) => onClickNumber(number)}
             onChange={(e) => onChangeDifficulty(e)}
             onClickUndo={onClickUndo}
@@ -258,5 +251,3 @@ export const Game = () => {
     </>
   );
 }
-
-// export default App;

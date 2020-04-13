@@ -1,15 +1,15 @@
 import React from 'react';
 import { Game } from './Game';
 import './App.css';
-import { NumberProvider } from './context/NumberContext';
+import { SudokuProvider } from './context/SudokuContext';
 
 /**
  * App is the root React component.
  */
 export const App = () => {
   return (
-    <NumberProvider>
+    <SudokuProvider>
       <Game />
-    </NumberProvider>
+    </SudokuProvider>
   );
 }

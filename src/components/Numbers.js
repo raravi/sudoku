@@ -1,11 +1,11 @@
 import React from 'react';
-import { useNumberValue } from '../context/NumberContext';
+import { useSudokuContext } from '../context/SudokuContext';
 
 /**
  * React component for the Number Selector in the Status Section.
  */
 export const Numbers = (props) => {
-  let [ numberSelected ] = useNumberValue();
+  let { numberSelected } = useSudokuContext();
 
   return (
     <div className="status__numbers">

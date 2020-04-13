@@ -11,8 +11,8 @@ import { Mode } from '../Mode';
 export const StatusSection = (props) => {
   return (
     <section className="status">
-      <Difficulty difficulty={props.difficulty} onChange={props.onChange} />
-      <Timer timeGameStarted={props.timeGameStarted} won={props.won} />
+      <Difficulty onChange={props.onChange} />
+      <Timer />
       <Numbers onClickNumber={(number) => props.onClickNumber(number)} />
       <div className="status__actions">
         <Action action='undo' onClickAction={props.onClickUndo} />
