@@ -8,7 +8,7 @@
   "dependencies": {
     "@testing-library/jest-dom": "^5.7.0",
     "@testing-library/react": "^10.0.4",
-    "@testing-library/user-event": "^10.1.2",
+    "@testing-library/user-event": "^10.3.0",
     "gh-pages": "^2.2.0",
     "moment": "^2.25.3",
     "react": "^16.13.1",
