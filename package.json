@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "private": true,
   "author": "Amith Raravi <amith.raravi@gmail.com>",
-  "homepage": "https://raravi.github.io/sudoku",
   "license": "MIT",
   "dependencies": {
     "@testing-library/jest-dom": "^5.7.0",
