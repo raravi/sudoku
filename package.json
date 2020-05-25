@@ -5,11 +5,11 @@
   "author": "Amith Raravi <amith.raravi@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@testing-library/jest-dom": "^5.7.0",
+    "@testing-library/jest-dom": "^5.8.0",
     "@testing-library/react": "^10.0.4",
-    "@testing-library/user-event": "^10.3.0",
+    "@testing-library/user-event": "^10.3.5",
     "gh-pages": "^2.2.0",
-    "moment": "^2.25.3",
+    "moment": "^2.26.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.1"
