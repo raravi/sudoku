@@ -1,10 +1,14 @@
 import React from 'react';
 import { useSudokuContext } from '../context/SudokuContext';
 
+type DifficultyProps = {
+  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
+};
+
 /**
  * React component for the Difficulty Selector.
  */
-export const Difficulty = (props) => {
+export const Difficulty = (props: DifficultyProps) => {
   let { difficulty } = useSudokuContext();
 
   return (
