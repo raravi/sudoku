@@ -5,10 +5,20 @@ import { Numbers } from '../Numbers';
 import { Action } from '../Action';
 import { Mode } from '../Mode';
 
+type StatusSectionProps = {
+  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void,
+  onClickNumber: (number: string) => void,
+  onClickUndo: () => void,
+  onClickErase: () => void,
+  onClickHint: () => void,
+  onClickMistakesMode: () => void,
+  onClickFastMode: () => void,
+};
+
 /**
  * React component for the Status Section.
  */
-export const StatusSection = (props) => {
+export const StatusSection = (props: StatusSectionProps) => {
   return (
     <section className="status">
       <Difficulty onChange={props.onChange} />
