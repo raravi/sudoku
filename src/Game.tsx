@@ -10,7 +10,7 @@ import { useSudokuContext } from './context/SudokuContext';
 /**
  * Game is the main React component.
  */
-export const Game = () => {
+export const Game: React.FC<{}> = () => {
   /**
    * All the variables for holding state:
    * gameArray: Holds the current state of the game.
@@ -34,15 +34,15 @@ export const Game = () => {
         cellSelected, setCellSelected,
         initArray, setInitArray,
         setWon } = useSudokuContext();
-  let [ mistakesMode, setMistakesMode ] = useState(false);
-  let [ history, setHistory ] = useState([]);
-  let [ solvedArray, setSolvedArray ] = useState([]);
-  let [ overlay, setOverlay ] = useState(false);
+  let [ mistakesMode, setMistakesMode ] = useState<boolean>(false);
+  let [ history, setHistory ] = useState<string[][]>([]);
+  let [ solvedArray, setSolvedArray ] = useState<string[]>([]);
+  let [ overlay, setOverlay ] = useState<boolean>(false);
 
   /**
    * Creates a new game and initializes the state variables.
    */
-  function _createNewGame(e) {
+  function _createNewGame(e?: React.ChangeEvent<HTMLSelectElement>) {
     let [ temporaryInitArray, temporarySolvedArray ] = getUniqueSudoku(difficulty, e);
 
     setInitArray(temporaryInitArray);
@@ -58,8 +58,8 @@ export const Game = () => {
   /**
    * Checks if the game is solved.
    */
-  function _isSolved(index, value) {
-    if (gameArray.every((cell, cellIndex) => {
+  function _isSolved(index: number, value: string) {
+    if (gameArray.every((cell: string, cellIndex: number) => {
           if (cellIndex === index)
             return value === solvedArray[cellIndex];
           else
@@ -74,7 +74,7 @@ export const Game = () => {
    * Fills the cell with the given 'value'
    * Used to Fill / Erase as required.
    */
-  function _fillCell(index, value) {
+  function _fillCell(index: number, value: string) {
     if (initArray[index] === '0') {
       // Direct copy results in interesting set of problems, investigate more!
       let tempArray = gameArray.slice();
@@ -98,7 +98,7 @@ export const Game = () => {
    * A 'user fill' will be passed on to the
    * _fillCell function above.
    */
-  function _userFillCell(index, value) {
+  function _userFillCell(index: number, value: string) {
     if (mistakesMode) {
       if (value === solvedArray[index]) {
         _fillCell(index, value);
@@ -122,7 +122,7 @@ export const Game = () => {
   /**
    * On Click of a Game cell.
    */
-  function onClickCell(indexOfArray) {
+  function onClickCell(indexOfArray: number) {
     if (fastMode && numberSelected !== '0') {
       _userFillCell(indexOfArray, numberSelected);
     }
@@ -134,7 +134,7 @@ export const Game = () => {
    * 1. Update 'Difficulty' level
    * 2. Create New Game
    */
-  function onChangeDifficulty(e) {
+  function onChangeDifficulty(e: React.ChangeEvent<HTMLSelectElement>) {
     setDifficulty(e.target.value);
     _createNewGame(e);
   }
@@ -143,7 +143,7 @@ export const Game = () => {
    * On Click of Number in Status section,
    * either fill cell or set the number.
    */
-  function onClickNumber(number) {
+  function onClickNumber(number: string) {
     if (fastMode) {
       setNumberSelected(number)
     } else if (cellSelected !== -1) {
@@ -160,7 +160,8 @@ export const Game = () => {
       let tempHistory = history.slice();
       let tempArray = tempHistory.pop();
       setHistory(tempHistory);
-      setGameArray(tempArray);
+      if (tempArray !== undefined)
+        setGameArray(tempArray);
     }
   }
 
@@ -215,7 +216,7 @@ export const Game = () => {
    */
   useEffect(() => {
     _createNewGame();
-  // eslint-disable-next-line
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -224,11 +225,11 @@ export const Game = () => {
         <Header onClick={onClickNewGame}/>
         <div className="innercontainer">
           <GameSection
-            onClick={(indexOfArray) => onClickCell(indexOfArray)}
+            onClick={(indexOfArray: number) => onClickCell(indexOfArray)}
           />
           <StatusSection
-            onClickNumber={(number) => onClickNumber(number)}
-            onChange={(e) => onChangeDifficulty(e)}
+            onClickNumber={(number: string) => onClickNumber(number)}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => onChangeDifficulty(e)}
             onClickUndo={onClickUndo}
             onClickErase={onClickErase}
             onClickHint={onClickHint}

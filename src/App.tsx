@@ -6,7 +6,7 @@ import { SudokuProvider } from './context/SudokuContext';
 /**
  * App is the root React component.
  */
-export const App = () => {
+export const App: React.FC<{}> = () => {
   return (
     <SudokuProvider>
       <Game />
