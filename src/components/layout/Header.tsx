@@ -1,9 +1,13 @@
 import React from 'react';
 
+type HeaderProps = {
+  onClick: () => void
+};
+
 /**
  * React component for the Header Section.
  */
-export const Header = (props) => {
+export const Header = (props: HeaderProps) => {
   return (
     <header className="header">
       <h1>
