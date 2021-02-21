@@ -88,7 +88,7 @@ let nullArray = [ '0', '0', '0', '0', '0', '0', '0', '0', '0',
 /**
  * Gets the coordinates of the center cell of the specified box.
  */
-function _getBoxCenter(box) {
+function _getBoxCenter(box: number) {
   // eslint-disable-next-line
   switch(box) {
     case 0: return [1,1];
@@ -99,7 +99,7 @@ function _getBoxCenter(box) {
     case 5: return [4,7];
     case 6: return [7,1];
     case 7: return [7,4];
-    case 8: return [7,7];
+    default: return [7,7];
   }
 }
 
@@ -108,7 +108,7 @@ function _getBoxCenter(box) {
  * 1. Box
  * 2. Cell
  */
-function _getIndexOfCell(box, cell) {
+function _getIndexOfCell(box: number, cell: number) {
   let [row, column] = _getBoxCenter(box);
   // eslint-disable-next-line
   switch(cell) {
@@ -128,14 +128,14 @@ function _getIndexOfCell(box, cell) {
 /**
  * Checks if Cell is available or not (i.e., filled).
  */
-function _cellAvailable(tempInitArray, box, value) {
+function _cellAvailable(tempInitArray: string[], box: number, value: number) {
   return tempInitArray[_getIndexOfCell(box, value)] === '0' ? 0 : 1;
 }
 
 /**
  * Generates a Unique Sudoku puzzle from a solved Sudoku.
  */
-function _generateUniqueSudoku(solvedArray, difficulty, e) {
+function _generateUniqueSudoku(solvedArray: string[], difficulty: string, e?: React.ChangeEvent<HTMLSelectElement>) {
   let currentDifficulty = difficulty;
   let minimumCells, maximumCells, totalCells, box, cell;
 
@@ -209,7 +209,7 @@ function _generateUniqueSudoku(solvedArray, difficulty, e) {
   return tempInitArray;
 }
 
-export const getUniqueSudoku = (difficulty, e) => {
+export const getUniqueSudoku = (difficulty: string, e?: React.ChangeEvent<HTMLSelectElement>) => {
   let temporaryInitArray = nullArray.slice();
   let temporarySolvedArray = nullArray.slice();
   let sudoku = getSudoku();
