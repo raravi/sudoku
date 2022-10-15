@@ -25,6 +25,10 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "cy:open": "cypress open",
+    "cy:e2e": "cypress open --e2e --browser electron ",
+    "dev": "start-server-and-test 3000 cy:open",
+    "e2e": "start-server-and-test 3000 cy:e2e",
     "format": "prettier --write 'src/**/*.{ts,tsx}'"
   },
   "eslintConfig": {
@@ -46,7 +50,8 @@
     "cypress": "^10.9.0",
     "husky": "^8.0.1",
     "lint-staged": "^13.0.3",
-    "prettier": "^1.18.2"
+    "prettier": "^1.18.2",
+    "start-server-and-test": "^1.14.0"
   },
   "husky": {
     "hooks": {
