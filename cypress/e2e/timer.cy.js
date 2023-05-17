@@ -9,14 +9,11 @@ describe('Timer', () => {
       cy.clock()
       cy.visit('/')
       cy.contains('.status__time', '00:00')
-      cy.clock().then(clock => {
-        clock.restore()
 
-      })
       // cy.clock()
       // cy.tick(5000)
       // cy.tick(5000)
-      // cy.tick(5000)
+      cy.tick(5000)
       cy.contains('.status__time', '00:05')
     })
   })
