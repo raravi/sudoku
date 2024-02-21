@@ -21,9 +21,6 @@
     "allowSyntheticDefaultImports": true
   },
   "include": [
-    "cypress"
-, "cypress.config.ts"  ],
-  "exclude": [
     "src"
   ]
 }
