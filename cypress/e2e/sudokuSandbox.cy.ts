@@ -1,3 +1,5 @@
+/// <reference types="Cypress" />
+
 import _ from 'lodash';
 
 describe('Sandbox', () => {
@@ -60,7 +62,6 @@ describe('Sandbox', () => {
     return valuesToRemove;
   }
 
-  //legit
   const getLocalBoxValues = (row: number, col: number, currentGrid: any) => {
     const valuesToRemove: any = [];
     const startingRow = row - (row % 3);
@@ -82,7 +83,6 @@ describe('Sandbox', () => {
   }
 
   const cleanBooleanArray = (row: number, col: number, values: any, booleanArray: any) => {
-    // console.log("row, col, bool arr", row, col, booleanArray);
     values.map((value: number) => {
       let index = Number(value)-1;
       booleanArray[index] = false;
@@ -92,21 +92,16 @@ describe('Sandbox', () => {
     } else {
       return booleanArray;
     }
-    
   }
 
-
   const isGridComplete = (board: any) => {
-    cy.log("Is grid complete?");
     for(let row = 0; row < 9; row++) {
       for(let col = 0; col < 9; col++){
         if(Array.isArray(board[row][col])) {
-          cy.log("No");
           return false;
         }
       }
     }
-    cy.log("Yes");
     return true;
   }
 
@@ -114,10 +109,14 @@ describe('Sandbox', () => {
     return 1 === boolArray.filter((value: boolean) => value === true).length;
   }
 
-  const fillGrid = () => {
-    console.log("The grid is ready to be filled I guess ");
-    return true;
-
+  const fillGrid = (grid: any) => {
+    for(let index = 0; index < 81; index++) { 
+      let row = Math.floor(index / 9);
+      let col = index % 9;
+      let value = grid[row][col];
+      cy.get("#cell_" + index).click(({force: true})).invoke('attr', 'class').should('contain', 'game__cell--highlightselected');
+      cy.get(".status__number").contains(value).click(); 
+    };
   }
 
   let sudokuBoard: any;
@@ -126,27 +125,15 @@ describe('Sandbox', () => {
     cy.visit('http://localhost:3000/').then(() => {
       sudokuBoard = getStartingSudokuValues();
     }).then(() => {
-      console.log("1 The sud board: ", sudokuBoard);
       while(!isGridComplete(sudokuBoard)) {
         sudokuBoard = removePossibleValuesForCells(sudokuBoard);
       }
-    }).then(() => {
-      console.log("Complete board: ", sudokuBoard);
-      cy.pause();
     });
-
   });
 
-
   it('Solves the puzzle', () => {
-    // console.log("Is the board ready?: ", isGridComplete(sudokuBoard));
-    // console.log("Current state of the sudoku board: ", sudokuBoard);
-    // let thisBoard = removePossibleValuesForCells(sudokuBoard);
-    // console.log("Is the board ready?: ", isGridComplete(sudokuBoard));
-    // console.log("Current state of the sudoku board: ", thisBoard);
-    cy.get(".game").should('exist');
-    cy.pause(); 
-    // fillGrid();
+    fillGrid(sudokuBoard);
+    cy.contains('solved').should('exist');
   });
 
 })
