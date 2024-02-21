@@ -1,19 +1,16 @@
-describe('Sandbox', () => {
-  type GridMap = { [key: number]: { [key: number]: any } };
-  let sudokuBoard: GridMap;
+import _ from 'lodash';
 
+describe('Sandbox', () => {
 
   const arrayHasValue = (array: any, value: any) => {
     return -1 < Number(array.indexOf(value))
   }
 
-  const getStartingSudokuValues = () => {
+  const getStartingSudokuValues = () => { 
     type GridMap = { [key: number]: { [key: number]: any } };
     let sudokuCellMap: GridMap;
-    // cy.pause();
-    cy.intercept('POST', '**threatListUpdates**').as('getModels');
     sudokuCellMap = new Array(9).fill(null).map(() => new Array(9).fill(null).map(() => new Array(9).fill(true)));
-    for(let index = 0; index < 81; index++) {
+    for(let index = 0; index < 81; index++) { 
       let row = Math.floor(index / 9);
       let col = index % 9;
       cy.get("#cell_" + index).then(($element) => {
@@ -21,36 +18,37 @@ describe('Sandbox', () => {
         if(text != '0') {
           sudokuCellMap[row][col] = Number(text);
         }
-      }); 
-    }
-    cy.pause()
-    cy.log("just got the sudoku starting map");
-    cy.pause();
-    // cy.wait('@getModels')
-    // cy.wait('@getModels')
-    return sudokuCellMap
+      });
+    };
+    return sudokuCellMap;
   };
 
-  const removeValuesFromBooleanArray = (values: any, booleanArray: any) => {
-    for(let value in values){
-      let indexOfBooleanArray = Number(value) - 1;
-      booleanArray[indexOfBooleanArray] = false;
+  const removePossibleValuesForCells = (currentBoard: any) => {
+    let newSudokuMap = _.cloneDeep(currentBoard);
+    for(let row = 0; row < 9; row++) {
+      for(let col = 0; col < 9; col++){
+        let cellValue = currentBoard[row][col];
+        if(Array.isArray(cellValue)) {
+          let valuesToRemove = getValuesToRemove(row, col, currentBoard);
+          newSudokuMap[row][col] = cleanBooleanArray(row, col, valuesToRemove, cellValue);
+        }
+      }
     }
-    return booleanArray;
+    return newSudokuMap;
   }
 
-  const getValuesToRemove = (row: number, col: number) => {
-    const valuesToRemoveFromColAndRow = getRowAndColumnValuesFromArray(row, col);
-    const valuesFromLocalBox = getLocalBoxValues(row, col);
+  const getValuesToRemove = (row: number, col: number, currentGrid: any) => {
+    const valuesToRemoveFromColAndRow = getRowAndColumnValuesFromArray(row, col, currentGrid);
+    const valuesFromLocalBox = getLocalBoxValues(row, col, currentGrid);
     return [...new Set([...valuesToRemoveFromColAndRow, ...valuesFromLocalBox])];
-
   }
 
-  const getRowAndColumnValuesFromArray = (row: number, col: number) => {
-    const valuesToRemove = [];
+  // This one is good
+  const getRowAndColumnValuesFromArray = (row: number, col: number, currentGrid: any) => {
+    const valuesToRemove = new Array();
     for(let index = 0; index < 9; index++){
-      let valueInColumn = sudokuBoard[row][index];
-      let valueInRow = sudokuBoard[index][col];
+      let valueInColumn = currentGrid[row][index];
+      let valueInRow = currentGrid[index][col];
 
       if(!Array.isArray(valueInColumn) && !arrayHasValue(valuesToRemove, valueInColumn)) {
         valuesToRemove.push(valueInColumn);
@@ -62,8 +60,8 @@ describe('Sandbox', () => {
     return valuesToRemove;
   }
 
-  const getLocalBoxValues = (row: number, col: number) => {
-    console.log("Removing current box values");
+  //legit
+  const getLocalBoxValues = (row: number, col: number, currentGrid: any) => {
     const valuesToRemove: any = [];
     const startingRow = row - (row % 3);
     const startingCol = col - (col % 3);
@@ -73,8 +71,7 @@ describe('Sandbox', () => {
 
     for(let rowNum = startingRow; rowNum < finalRow; rowNum++){
       for(let colNum = startingCol; colNum < finalCol; colNum++) {
-
-        let valueInCell = sudokuBoard[rowNum][colNum];
+        let valueInCell = currentGrid[rowNum][colNum];
         if(!Array.isArray(valueInCell) && !arrayHasValue(valuesToRemove, valueInCell)) {
           valuesToRemove.push(valueInCell);
         }
@@ -84,25 +81,26 @@ describe('Sandbox', () => {
     return valuesToRemove;
   }
 
-  const removePossibleValuesForCells = (currentBoard: GridMap) => {
-    let newBoard = Object.assign({}, currentBoard);
-    for(let row = 0; row < 9; row++) {
-      for(let col = 0; col < 9; col++){
-        if(Array.isArray(newBoard[row][col])) {
-          let valuesToRemove = getValuesToRemove(row, col);
-          let currentConditionalArray = Object.assign({}, newBoard[row][col]);
-          newBoard[row][col] = removeValuesFromBooleanArray(valuesToRemove, currentConditionalArray)
-        }
-      }
-    } 
-    return newBoard;
+  const cleanBooleanArray = (row: number, col: number, values: any, booleanArray: any) => {
+    // console.log("row, col, bool arr", row, col, booleanArray);
+    values.map((value: number) => {
+      let index = Number(value)-1;
+      booleanArray[index] = false;
+    });
+    if(hasOneOption(booleanArray)) {
+      return (booleanArray.indexOf(true) + 1);
+    } else {
+      return booleanArray;
+    }
+    
   }
 
-  const isGridComplete = () => {
+
+  const isGridComplete = (board: any) => {
     cy.log("Is grid complete?");
     for(let row = 0; row < 9; row++) {
-      for(let col = 0; row < 9; col++){
-        if(Array.isArray(sudokuBoard[row][col])) {
+      for(let col = 0; col < 9; col++){
+        if(Array.isArray(board[row][col])) {
           cy.log("No");
           return false;
         }
@@ -113,50 +111,42 @@ describe('Sandbox', () => {
   }
 
   const hasOneOption = (boolArray: any) => {
-    return boolArray.filter((value: boolean) => value === true).length;
-  }
-
-  const convertPendingConditionalArrays = () => {
-    console.log("We made it here");
-    cy.pause();
-    for(let row = 0; row < 9; row++) {
-      for(let col = 0; col < 9; col++){
-        let currentCell = sudokuBoard[row][col];
-        if(Array.isArray(currentCell) && hasOneOption(currentCell)) {
-          sudokuBoard[row][col] = (currentCell.indexOf(true) + 1);
-        }
-      }
-    }
+    return 1 === boolArray.filter((value: boolean) => value === true).length;
   }
 
   const fillGrid = () => {
-    console.log("The grid is ready to be filled I guess ", sudokuBoard);
-    cy.pause();
+    console.log("The grid is ready to be filled I guess ");
     return true;
 
   }
 
-  before('Get Current value of the sudoku board', () => {
+  let sudokuBoard: any;
+
+  beforeEach(() => {
     cy.visit('http://localhost:3000/').then(() => {
       sudokuBoard = getStartingSudokuValues();
+    }).then(() => {
+      console.log("1 The sud board: ", sudokuBoard);
+      while(!isGridComplete(sudokuBoard)) {
+        sudokuBoard = removePossibleValuesForCells(sudokuBoard);
+      }
+    }).then(() => {
+      console.log("Complete board: ", sudokuBoard);
+      cy.pause();
     });
+
   });
 
-  // describe("Solves the puzzle, but in a new describe block", () => {
-    it('Solves the puzzle', ()=> {
-      cy.log("Solving the puzzle ... ");
-      cy.pause();
-      let count = 0;
-      while(!isGridComplete()) {
-        cy.log("In the loop");
-        count++;
-        sudokuBoard = removePossibleValuesForCells(sudokuBoard);
-        convertPendingConditionalArrays();
-        cy.log(`This is the board after ${count} iterations:`, sudokuBoard);
-        cy.pause();
-      }
-      fillGrid();
-    });
-  // });
+
+  it('Solves the puzzle', () => {
+    // console.log("Is the board ready?: ", isGridComplete(sudokuBoard));
+    // console.log("Current state of the sudoku board: ", sudokuBoard);
+    // let thisBoard = removePossibleValuesForCells(sudokuBoard);
+    // console.log("Is the board ready?: ", isGridComplete(sudokuBoard));
+    // console.log("Current state of the sudoku board: ", thisBoard);
+    cy.get(".game").should('exist');
+    cy.pause(); 
+    // fillGrid();
+  });
 
 })
