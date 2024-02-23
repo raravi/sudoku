@@ -10,19 +10,26 @@ describe('Sandbox', () => {
 
   const getStartingSudokuValues = () => { 
     type GridMap = { [key: number]: { [key: number]: any } };
-    let sudokuCellMap: GridMap;
-    sudokuCellMap = new Array(9).fill(null).map(() => new Array(9).fill(null).map(() => new Array(9).fill(true)));
+    let startingBoard: GridMap;
+    let startingIndices: any;
+    startingIndices = [];
+
+    startingBoard = new Array(9).fill(null)
+      .map(() => new Array(9).fill(null)
+        .map(() => new Array(9).fill(true)));
+
     for(let index = 0; index < 81; index++) { 
       let row = Math.floor(index / 9);
       let col = index % 9;
       cy.get("#cell_" + index).then(($element) => {
         let text = $element.text(); 
         if(text != '0') {
-          sudokuCellMap[row][col] = Number(text);
+          startingBoard[row][col] = Number(text);
+          startingIndices.push(index);
         }
       });
     };
-    return sudokuCellMap;
+    return {startingBoard, startingIndices};
   };
 
   const removePossibleValuesForCells = (currentBoard: any) => {
@@ -32,7 +39,7 @@ describe('Sandbox', () => {
         let cellValue = currentBoard[row][col];
         if(Array.isArray(cellValue)) {
           let valuesToRemove = getValuesToRemove(row, col, currentBoard);
-          newSudokuMap[row][col] = cleanBooleanArray(row, col, valuesToRemove, cellValue);
+          newSudokuMap[row][col] = cleanBooleanArray(valuesToRemove, cellValue);
         }
       }
     }
@@ -82,10 +89,9 @@ describe('Sandbox', () => {
     return valuesToRemove;
   }
 
-  const cleanBooleanArray = (row: number, col: number, values: any, booleanArray: any) => {
+  const cleanBooleanArray = (values: any, booleanArray: any) => {
     values.map((value: number) => {
-      let index = Number(value)-1;
-      booleanArray[index] = false;
+      booleanArray[(Number(value)-1)] = false;
     });
     if(hasOneOption(booleanArray)) {
       return (booleanArray.indexOf(true) + 1);
@@ -109,21 +115,34 @@ describe('Sandbox', () => {
     return 1 === boolArray.filter((value: boolean) => value === true).length;
   }
 
-  const fillGrid = (grid: any) => {
+  const fillGrid = (grid: any, skipVals: any) => {
     for(let index = 0; index < 81; index++) { 
+      if(skipVals.includes(index)) {
+        continue;
+      }
       let row = Math.floor(index / 9);
       let col = index % 9;
       let value = grid[row][col];
-      cy.get("#cell_" + index).click(({force: true})).invoke('attr', 'class').should('contain', 'game__cell--highlightselected');
-      cy.get(".status__number").contains(value).click(); 
+      cy.get("#cell_" + index)
+        .click()
+        .invoke('attr', 'class')
+        .should('contain', 'game__cell--highlightselected');
+      cy.get(".status__number")
+        .contains(value)
+        .click()
     };
   }
 
   let sudokuBoard: any;
+  let filledIndices: any;
 
   beforeEach(() => {
-    cy.visit('http://localhost:3000/').then(() => {
-      sudokuBoard = getStartingSudokuValues();
+    cy.visit('/').then(() => {
+      cy.get(".game__cell.game__cell--filled").should('be.visible');
+      const startingSudokuValues = getStartingSudokuValues();
+      sudokuBoard = startingSudokuValues.startingBoard;
+      filledIndices = startingSudokuValues.startingIndices;
+      return;
     }).then(() => {
       while(!isGridComplete(sudokuBoard)) {
         sudokuBoard = removePossibleValuesForCells(sudokuBoard);
@@ -132,7 +151,7 @@ describe('Sandbox', () => {
   });
 
   it('Solves the puzzle', () => {
-    fillGrid(sudokuBoard);
+    fillGrid(sudokuBoard, filledIndices);
     cy.contains('solved').should('exist');
   });
 
