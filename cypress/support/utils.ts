@@ -4,57 +4,66 @@ export const getStartingSudokuValues = () => {
   type GridMap = { [key: number]: { [key: number]: any } };
   let startingBoard: GridMap;
   let startingIndices: any;
-  startingIndices = [];
   startingBoard = new Array(9).fill(null).map(() => new Array(9).fill(null).map(() => new Array(9).fill(true)));
-
+  startingIndices = [];
   for(let index = 0; index < 81; index++) { 
-      let row = Math.floor(index / 9);
-      let col = index % 9;
-      cy.get("#cell_" + index).then(($element) => {
-        let text = $element.text();
-        if(text != '0') {
-          startingBoard[row][col] = Number(text);
+      let row = getRowFromIndex(index);
+      let col = getColFromIndex(index);
+      let cellValue;
+      cy.findByTestId(`cell_${index}`).then(($element) => {
+        cellValue = $element.text();
+        if(cellValue != '0') {
+          startingBoard[row][col] = Number(cellValue);
           startingIndices.push(index);
         }
       });
   };
-  return {startingBoard, startingIndices};
+  return cy.wrap({startingBoard, startingIndices});
 };
 
-export const isGridComplete = (board: any) => {
-  for(let row = 0; row < 9; row++) {
-    for(let col = 0; col < 9; col++){
-      if(Array.isArray(board[row][col])) {
-        return false;
-      }
-    }
+export const solveBoard = (startingSudokuValues: any) => {
+  let solvedIndices = startingSudokuValues.startingIndices;
+  let sudokuGrid= startingSudokuValues.startingBoard
+  let count = 30;
+  while(count > 0) {
+    sudokuGrid = removePossibleValuesForCells(sudokuGrid, solvedIndices);
+    count--;
   }
-  return true;
+  return sudokuGrid;
 }
 
-export const removePossibleValuesForCells = (currentBoard: any) => {
-  let newSudokuMap = _.cloneDeep(currentBoard);
-  for(let row = 0; row < 9; row++) {
-    for(let col = 0; col < 9; col++){
-      let cellValue = currentBoard[row][col];
-      if(Array.isArray(cellValue)) {
-        let valuesToRemove = getValuesToRemove(row, col, currentBoard);
-        newSudokuMap[row][col] = cleanBooleanArray(valuesToRemove, cellValue);
+export const backtrackSolve = (grid: any, r = 0, c = 0) => {
+  console.log("Row and coll during solve: ", r, c, grid);
+  if (r == 9) return grid;
+  else if (c === 9) return backtrackSolve(grid, r + 1, 0);
+  else if (!Array.isArray(grid[r][c]) && grid[r][c] !== 0) return backtrackSolve(grid, r, c + 1);
+  else {
+      for (let k = 1; k <= 9; k++) {
+          let valuesAssociatedToGrid = getValuesAssociatedToCell(r, c, grid);
+          // console.log("row, col, k, and vals associated", r, c, k, valuesAssociatedToGrid);
+          if (!valuesAssociatedToGrid.includes(k)) {
+              grid[r][c] = k;
+              if (backtrackSolve(grid, r, c + 1)) {
+                  return true;
+              }
+              grid[r][c] = 0;
+          }
       }
-    }
+      return false;
   }
-  return newSudokuMap;
+
 }
 
 export const fillMissingValuesInGrid = (grid: any, alreadySolvedCellIndices: any) => {
+  console.log("This grid should be completed: ", grid);
   for(let index = 0; index < 81; index++) { 
     if(alreadySolvedCellIndices.includes(index)) {
       continue;
     }
-    let row = Math.floor(index / 9);
-    let col = index % 9;
+    let row = getRowFromIndex(index);
+    let col = getColFromIndex(index);
     let value = grid[row][col];
-    cy.get("#cell_" + index)
+    cy.findByTestId(`cell_${index}`)
       .click()
       .invoke('attr', 'class')
       .should('contain', 'game__cell--highlightselected');
@@ -64,13 +73,39 @@ export const fillMissingValuesInGrid = (grid: any, alreadySolvedCellIndices: any
   };
 }
 
-const getValuesToRemove = (row: number, col: number, currentGrid: any) => {
-  const valuesToRemoveFromColAndRow = getRowAndColumnValuesFromArray(row, col, currentGrid);
+// paused for now, while we strategize on how to solve on hard mode
+const isGridComplete = (board: any) => {
+  for(let index =0; index < 81; index++){
+    let row = getRowFromIndex(index);
+    let col = getColFromIndex(index);
+    if(Array.isArray(board[row][col])) return false;
+  }
+  return true;
+}
+
+const removePossibleValuesForCells = (currentBoard: any, solvedIndices: any) => {
+  let newSudokuMap = _.cloneDeep(currentBoard);
+  for(let index = 0; index < 81; index++) {
+    if(solvedIndices.includes(index)) continue;
+    let row = getRowFromIndex(index);
+    let col = getColFromIndex(index);
+    let cellValue = currentBoard[row][col];
+    if(Array.isArray(cellValue)) {
+      let valuesToRemove = getValuesAssociatedToCell(row, col, currentBoard);
+      let newBoolArray = removePossibleValues(valuesToRemove, cellValue);
+      newSudokuMap[row][col] = computeSudokuValue(newBoolArray);
+    }
+  }
+  return newSudokuMap;
+}
+
+const getValuesAssociatedToCell = (row: number, col: number, currentGrid: any) => {
+  const valuesToRemoveFromColAndRow = getRowAndColumnValuesAssociatedToCell(row, col, currentGrid);
   const valuesFromLocalBox = getLocalBoxValues(row, col, currentGrid);
   return [...new Set([...valuesToRemoveFromColAndRow, ...valuesFromLocalBox])];
 }
 
-const getRowAndColumnValuesFromArray = (row: number, col: number, currentGrid: any) => {
+const getRowAndColumnValuesAssociatedToCell = (row: number, col: number, currentGrid: any) => {
   const valuesToRemove = new Array();
   for(let index = 0; index < 9; index++){
     let valueInColumn = currentGrid[row][index];
@@ -100,7 +135,6 @@ const getLocalBoxValues = (row: number, col: number, currentGrid: any) => {
       if(!Array.isArray(valueInCell) && !arrayHasValue(valuesToRemove, valueInCell)) {
         valuesToRemove.push(valueInCell);
       }
-
     }
   }
   return valuesToRemove;
@@ -110,17 +144,29 @@ const arrayHasValue = (array: any, value: any) => {
   return -1 < Number(array.indexOf(value))
 }
 
-const cleanBooleanArray = (values: any, booleanArray: any) => {
+const removePossibleValues = (values: any, booleanArray: any) => {
   values.map((value: number) => {
     booleanArray[(Number(value)-1)] = false;
   });
-  if(arrayHasOneTrueValueLeft(booleanArray)) {
-    return (booleanArray.indexOf(true) + 1);
+  return booleanArray
+}
+
+const computeSudokuValue = (boolArray: any) => {
+  if(arrayHasOneTrueValueLeft(boolArray)) {
+    return (boolArray.indexOf(true) + 1);
   } else {
-    return booleanArray;
+    return boolArray;
   }
 }
 
 const arrayHasOneTrueValueLeft = (boolArray: any) => {
   return 1 === boolArray.filter((value: boolean) => value === true).length;
+}
+
+const getRowFromIndex = (index: number) => {
+  return Math.floor(index / 9);
+}
+
+const getColFromIndex = (index: number) => {
+  return index % 9;
 }

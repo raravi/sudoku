@@ -80,16 +80,16 @@ export const GameSection = (props: GameSectionProps) => {
     if (value !== '0') {
       if (initArray[indexOfArray] === '0') {
         return (
-          <td id={`cell_${indexOfArray}`} className={`game__cell game__cell--userfilled game__cell--${highlight}selected`} key={indexOfArray} onClick={() => props.onClick(indexOfArray)}>{value}</td>
+          <td data-testid={`cell_${indexOfArray}`} className={`game__cell game__cell--userfilled game__cell--${highlight}selected`} key={indexOfArray} onClick={() => props.onClick(indexOfArray)}>{value}</td>
         )
       } else {
         return (
-          <td id={`cell_${indexOfArray}`} className={`game__cell game__cell--filled game__cell--${highlight}selected`} key={indexOfArray} onClick={() => props.onClick(indexOfArray)}>{value}</td>
+          <td data-testid={`cell_${indexOfArray}`} className={`game__cell game__cell--filled game__cell--${highlight}selected`} key={indexOfArray} onClick={() => props.onClick(indexOfArray)}>{value}</td>
         )
       }
     } else {
       return (
-        <td id={`cell_${indexOfArray}`} className={`game__cell game__cell--${highlight}selected`} key={indexOfArray} onClick={() => props.onClick(indexOfArray)}>{value}</td>
+        <td data-testid={`cell_${indexOfArray}`} className={`game__cell game__cell--${highlight}selected`} key={indexOfArray} onClick={() => props.onClick(indexOfArray)}>{value}</td>
       )
     }
   }
@@ -101,16 +101,16 @@ export const GameSection = (props: GameSectionProps) => {
     if (value !== '0') {
       if (initArray[indexOfArray] === '0') {
         return (
-          <td id={`cell_${indexOfArray}`} className="game__cell game__cell--userfilled" key={indexOfArray} onClick={() => props.onClick(indexOfArray)}>{value}</td>
+          <td data-testid={`cell_${indexOfArray}`} className="game__cell game__cell--userfilled" key={indexOfArray} onClick={() => props.onClick(indexOfArray)}>{value}</td>
         )
       } else {
         return (
-          <td id={`cell_${indexOfArray}`} className="game__cell game__cell--filled" key={indexOfArray} onClick={() => props.onClick(indexOfArray)}>{value}</td>
+          <td data-testid={`cell_${indexOfArray}`} className="game__cell game__cell--filled" key={indexOfArray} onClick={() => props.onClick(indexOfArray)}>{value}</td>
         )
       }
     } else {
       return (
-        <td id={`cell_${indexOfArray}`} className="game__cell" key={indexOfArray} onClick={() => props.onClick(indexOfArray)}>{value}</td>
+        <td data-testid={`cell_${indexOfArray}`} className="game__cell" key={indexOfArray} onClick={() => props.onClick(indexOfArray)}>{value}</td>
       )
     }
   }
