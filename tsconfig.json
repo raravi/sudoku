@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es2015",
     "lib": [
       "dom",
       "dom.iterable",
@@ -10,6 +10,7 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "strict": true,
+    "types": ["cypress", "@testing-library/cypress"],
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
     "module": "esnext",

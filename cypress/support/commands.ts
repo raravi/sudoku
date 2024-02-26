@@ -1,4 +1,5 @@
 /// <reference types="cypress" />
+import '@testing-library/cypress/add-commands'
 // ***********************************************
 // This example commands.ts shows you how to
 // create various custom commands and overwrite
@@ -11,7 +12,6 @@
 //
 //
 // -- This is a parent command --
-// Cypress.Commands.add('login', (email, password) => { ... })
 //
 //
 // -- This is a child command --
