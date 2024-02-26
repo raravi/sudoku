@@ -32,15 +32,13 @@ export const solveBoard = (startingSudokuValues: any) => {
   return sudokuGrid;
 }
 
-export const backtrackSolve = (grid: any, r = 0, c = 0) => {
-  console.log("Row and coll during solve: ", r, c, grid);
-  if (r == 9) return grid;
+export const backtrackSolve = (grid: any, r = 0, c = 0): boolean => {
+  if (r == 9) return true;
   else if (c === 9) return backtrackSolve(grid, r + 1, 0);
   else if (!Array.isArray(grid[r][c]) && grid[r][c] !== 0) return backtrackSolve(grid, r, c + 1);
   else {
       for (let k = 1; k <= 9; k++) {
           let valuesAssociatedToGrid = getValuesAssociatedToCell(r, c, grid);
-          // console.log("row, col, k, and vals associated", r, c, k, valuesAssociatedToGrid);
           if (!valuesAssociatedToGrid.includes(k)) {
               grid[r][c] = k;
               if (backtrackSolve(grid, r, c + 1)) {
@@ -51,11 +49,9 @@ export const backtrackSolve = (grid: any, r = 0, c = 0) => {
       }
       return false;
   }
-
 }
 
 export const fillMissingValuesInGrid = (grid: any, alreadySolvedCellIndices: any) => {
-  console.log("This grid should be completed: ", grid);
   for(let index = 0; index < 81; index++) { 
     if(alreadySolvedCellIndices.includes(index)) {
       continue;

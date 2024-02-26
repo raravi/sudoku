@@ -18,7 +18,7 @@ describe('Solve The Sudoku Boards', () => {
       });
     });
   
-    it('Solves the puzzle using elimination', () => {
+    it('Solves the puzzle using backtracking', () => {
       fillMissingValuesInGrid(sudokuBoard, startingIndices);
       cy.contains('solved').should('exist');
     });
@@ -37,7 +37,7 @@ describe('Solve The Sudoku Boards', () => {
       });
     });
   
-    it('Solves the puzzle using elimination', () => {
+    it('Solves the puzzle using backtracking', () => {
       fillMissingValuesInGrid(sudokuBoard, startingIndices);
       cy.contains('solved').should('exist');
     });
@@ -56,7 +56,7 @@ describe('Solve The Sudoku Boards', () => {
       });
     });
   
-    it('Solves the puzzle using elimination', () => {
+    it('Solves the puzzle using backtracking', () => {
       fillMissingValuesInGrid(sudokuBoard, startingIndices);
       cy.contains('solved').should('exist');
     });
