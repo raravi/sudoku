@@ -24,10 +24,12 @@ export const getStartingSudokuValues = () => {
 export const solveBoard = (startingSudokuValues: any) => {
   let solvedIndices = startingSudokuValues.startingIndices;
   let sudokuGrid= startingSudokuValues.startingBoard
-  let count = 30;
-  while(count > 0) {
+  while(!isGridComplete(sudokuGrid)) {
+    let prevGridState = _.cloneDeep(sudokuGrid);
     sudokuGrid = removePossibleValuesForCells(sudokuGrid, solvedIndices);
-    count--;
+    if(_.isEqual(prevGridState, sudokuGrid)){
+      backtrackSolve(sudokuGrid)
+    }
   }
   return sudokuGrid;
 }
@@ -71,6 +73,7 @@ export const fillMissingValuesInGrid = (grid: any, alreadySolvedCellIndices: any
 
 // paused for now, while we strategize on how to solve on hard mode
 const isGridComplete = (board: any) => {
+  
   for(let index =0; index < 81; index++){
     let row = getRowFromIndex(index);
     let col = getColFromIndex(index);
