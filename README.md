@@ -8,5 +8,3 @@ This is to introduce challanges in synchronicity while building out the CI/CD pi
 There are other aspects to this project such as behavior driven technology in Cucumber and a dockerized environment.
 
 ![license](https://img.shields.io/github/license/raravi/sudoku)&nbsp;&nbsp;![version](https://img.shields.io/github/package-json/v/raravi/sudoku)&nbsp;&nbsp;![dependencies](https://img.shields.io/depfu/raravi/sudoku)&nbsp;&nbsp;![last-commit](https://img.shields.io/github/last-commit/raravi/sudoku)
-
-[![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/Y8Y21VCIL)
