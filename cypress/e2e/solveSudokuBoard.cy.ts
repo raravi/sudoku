@@ -7,7 +7,7 @@ describe('Solve The Sudoku Boards', () => {
   let sudokuBoard: any;
   let startingCompletedIndices: any;
 
-  describe.only('Solve Sudoku Board - Easy', () => {
+  describe('Solve Sudoku Board - Easy', () => {
     const start = performance.now();
     beforeEach(() => {
       cy.visit('/').then(() => {
