@@ -24,7 +24,8 @@
     "eject": "react-scripts eject",
     "cy:e2e": "cypress open --e2e --browser chrome",
     "cy:open": "cypress open",
-    "dev": "start-server-and-test start http://localhost:3000 cy:open"
+    "cy:run": "cypress run",
+    "dev": "start-server-and-test start http://localhost:3000 cy:run"
   },
   "eslintConfig": {
     "extends": "react-app"
