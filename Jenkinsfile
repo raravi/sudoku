@@ -4,6 +4,11 @@ pipeline {
     tools {nodejs "Node21"}
 
     stages {
+        stage('Build Node Modules') {
+           steps {
+               sh 'npm i'
+           }
+       }
         stage("Build React App") {
             steps {
                 sh 'npm run build'
