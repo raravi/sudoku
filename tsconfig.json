@@ -19,8 +19,7 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "allowSyntheticDefaultImports": true,
-    "baseUrl": "http://localhost:3000"
+    "allowSyntheticDefaultImports": true
   },
   "include": [
     "src", "cypress"
