@@ -1,9 +1,13 @@
 pipeline {
     agent any
     stages {
-        stage('Doing everything in Docker') {
+        stage('Verify tooling') {
            steps {
-               sh 'docker compose up'
+               sh '''
+                   docker info
+                   docker version
+                   docker compose version
+                '''
            }
        }
     }
