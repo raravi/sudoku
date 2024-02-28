@@ -4,20 +4,10 @@ pipeline {
     tools {nodejs "Node21"}
 
     stages {
-        stage('Build Node Modules') {
+        stage('Doing everything in Docker') {
            steps {
-               sh 'npm i'
+               sh 'docker-compose up'
            }
        }
-        stage("Build React App") {
-            steps {
-                sh 'npm run build'
-            }
-        }
-        stage("Run Cypress Automation") {
-            steps {
-                sh 'npm run cy:run'
-            }
-        }
     }
 }
