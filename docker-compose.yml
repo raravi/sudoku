@@ -1,0 +1,18 @@
+version: '3.2'
+services:
+  fe:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - PORT=3000
+  cypress:
+    image: "cypress/included:latest"
+    depends_on:
+      - fe
+    environment:
+      - CYPRESS_baseUrl=http://fe:3000
+      - CYPRESS_VIDEO=true
+    working_dir: /e2e
+    volumes:
+      - ./:/e2e
