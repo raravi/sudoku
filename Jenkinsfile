@@ -1,12 +1,21 @@
 pipeline {
-
-    agent { dockerfile true }
-    
+    agent any
+    tools {nodejs "Node21"}
     stages {
-        stage('Verify tooling') {
+        stage('Build Node Modules') {
            steps {
-               sh 'docker version'
+               sh 'npm i'
            }
        }
+        stage("Build React App") {
+            steps {
+                sh 'npm run build'
+            }
+        }
+        stage("Run Cypress Automation") {
+            steps {
+                sh 'npm run cy:run'
+            }
+        }
     }
 }
