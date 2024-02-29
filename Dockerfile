@@ -1,4 +1,4 @@
-FROM anapsix/alpine-java
+FROM liatrio/jenkins-alpine
 WORKDIR /app
 COPY package*.json .
 COPY tsconfig.json .
