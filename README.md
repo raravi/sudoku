@@ -8,4 +8,3 @@ containerized in Docker and run in a
 CI CD pipeline with the Jenkinsfile.
 
 Additionally this project introduces challanges in synchronicity (not menat for TDD or BDD).
-
