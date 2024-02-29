@@ -7,7 +7,7 @@ pipeline {
                sh 'npm i'
            }
        }
-        stage("Build React App") {
+        stage("Start Sudoku Application") {
             steps {
                 sh 'npm run start &'
             }
