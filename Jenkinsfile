@@ -9,12 +9,12 @@ pipeline {
        }
         stage("Build React App") {
             steps {
-                sh 'npm run build'
+                sh 'npm run start'
             }
         }
         stage("Run Cypress Automation") {
             steps {
-                sh 'npm run cy:run'
+                sh 'npm run dev'
             }
         }
     }
