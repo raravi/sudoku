@@ -9,7 +9,7 @@ pipeline {
        }
         stage("Build React App") {
             steps {
-                sh 'npm run start'
+                sh 'npm run start &'
             }
         }
         stage("Run Cypress Automation") {
