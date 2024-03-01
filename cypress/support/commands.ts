@@ -1,5 +1,7 @@
 /// <reference types="cypress" />
-import '@testing-library/cypress/add-commands'
+import '@testing-library/cypress/add-commands';
+import { registerCommand } from 'cypress-wait-for-stable-dom';
+registerCommand();
 // ***********************************************
 // This example commands.ts shows you how to
 // create various custom commands and overwrite
