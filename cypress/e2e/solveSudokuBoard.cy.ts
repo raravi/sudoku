@@ -25,7 +25,6 @@ describe('Solve The Sudoku Boards', () => {
     });
 
     it('Solves the puzzle using backtracking', () => {
-      console.log('Easy - using elimination', performance.now() - start);
       fillMissingValuesInGrid(sudokuBoard, startingCompletedIndices);
       // TODO: fix bug associated with checking for solved Grid
     });
