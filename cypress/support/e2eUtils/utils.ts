@@ -28,7 +28,9 @@ export const solveBoard = (grid: any, r = 0, c = 0): boolean => {
       let valuesAssociatedToGrid = getValuesAssociatedToCell(r, c, grid);
       if (!valuesAssociatedToGrid.includes(tryValue)) {
         grid[r][c] = tryValue;
-        if (solveBoard(grid, r, c + 1)) return true;
+        if (solveBoard(grid, r, c + 1)) {
+          return true;
+        }
         grid[r][c] = 0;
       }
     }

@@ -1,4 +1,3 @@
-/// <reference types="cypress" />
-import '@testing-library/cypress/add-commands';
+import './commands.ts';
 import { registerCommand } from 'cypress-wait-for-stable-dom';
 registerCommand();
