@@ -1,6 +1,6 @@
 export const sudokuBoardConflictingValues = [
-  '8',
   '9',
+  '8',
   '7',
   '4',
   '6',
