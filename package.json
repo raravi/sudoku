@@ -51,6 +51,7 @@
     "cypress-wait-for-stable-dom": "^0.1.0",
     "cypress-watch-and-reload": "^1.10.6",
     "gh-pages": "^6.1.1",
+    "jest": "^27.5.1",
     "start-server-and-test": "^1.15.4"
   }
 }
